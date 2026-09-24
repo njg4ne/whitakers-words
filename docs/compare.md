@@ -1,5 +1,40 @@
 # mk270 vs ben-crowell forks
 
+## Background
+
+[William Whitaker's Words](https://en.wikipedia.org/wiki/William_Whitaker%27s_Words) is a
+Latin–English dictionary and morphological parser. It was written in Ada by William A.
+Whitaker (1936–2010), a retired USAF colonel who had chaired DARPA's High Order Language
+Working Group, the effort that produced Ada. Given an inflected form such as *amabantur*, it
+identifies the stem and ending, tags the grammar (imperfect passive indicative, 3rd person
+plural), and prints the dictionary entry and meaning. It also does English→Latin lookup. Its
+dictionary has about 39,000 entries, which Wikipedia notes "would result in hundreds of
+thousands of variations" once declensions and conjugations are counted.
+
+**Why it's worth using.** Our goal in another project is to take a starter such as *mater*
+or *ago, agere* and produce every form of that noun or verb, filtered by case, tense, mood
+and so on. WORDS already contains the two things that requires, as open, plain-text data:
+
+- **A lexicon that records stems and classes.** For example:
+  - `ag / ag / eg / act`, `V 3 1` (*ago, agere, egi, actus*)
+  - `mater / matr`, `N 3 1 F` (*mater, matris*)
+- **A table of about 1,800 tagged endings** (`INFLECTS.LAT`) that says which stem each ending
+  attaches to.
+
+Joining the two gives the full paradigm. Irregular words are covered by a separate list of
+unique forms. The program itself only parses in one direction, from a form back to the
+dictionary entry, but that makes it a ready-made check on any forms we generate.
+
+**Why look at forks and not a primary source.** Whitaker distributed WORDS as source code and
+DOS/Windows binaries from his personal website, and the last release was version 1.97F. After
+he died in 2010 the site went offline, and it survives only on the Internet Archive. There is
+no official repository and no maintainer. The canonical code is effectively Martin Keegan's
+cleanup on GitHub (mk270), which later stalled and stopped compiling on newer GNAT. Ben
+Crowell forked it in 2024 to keep it building. mk270 has since become active again. The two
+forks now differ in both code and data, so choosing a base means comparing them directly.
+
+## The forks
+
 Two forks are compared here:
 
 - `submodules/mk270` is Martin Keegan's cleanup of Whitaker's Ada source, hosted on GitHub.
@@ -10,6 +45,39 @@ active in Aug 2026. ben-crowell has 39 commits and was last active in Apr 2026.
 
 The notes below come from reading the source, the history and the CI configs. Neither fork
 has been built locally yet.
+
+## File types
+
+Whitaker wrote WORDS for DOS, so every file has an 8.3 name and a three-letter extension
+that says what role the file plays. Both forks keep the same layout.
+
+| Extension | Role | Files |
+|---|---|---|
+| `.LAT` | Hand-edited Latin source data, in plain text | `INFLECTS.LAT`, `UNIQUES.LAT`, `ADDONS.LAT` |
+| `.GEN` | The "GENERAL" dictionary. `DICTLINE.GEN` is edited by hand; `make` generates the rest from it | `DICTLINE.GEN`, plus `STEMLIST`, `STEMFILE`, `INDXFILE`, `DICTFILE`, `EWDSLIST` and `EWDSFILE` |
+| `.SEC` | Compiled inflection table, built from `INFLECTS.LAT` | `INFLECTS.SEC` |
+| `.SPE` / `.LOC` | Optional SPECIAL and LOCAL dictionaries with the same format as `DICTLINE`. They are loaded if present, and neither fork ships them | — |
+| `.MOD` / `.MDV` | Saved user and developer settings, written from the interactive menus | `WORD.MOD`, `WORD.MDV` |
+| `.OUT` / `.UNK` / `.STA` / `.DBG` | Optional runtime output: results, unknown words, statistics and debug output | `WORD.OUT`, `WORD.UNK`, `WORD.STA`, `WORD.DBG` |
+
+The hand-edited files:
+
+- **`DICTLINE.GEN`** (about 39k lines) has one entry per line in fixed columns. Each entry
+  gives the stems, part of speech, declension or conjugation (`N 3 1`, `V 1 1`), gender,
+  flags for age, area, frequency and source, and the English meaning.
+- **`INFLECTS.LAT`** (about 1,800 entries) has one ending per line. Each line gives the part
+  of speech, class and variant, the grammar tags (for example `ABL S F`), which stem the ending
+  attaches to, the ending itself, and flags for age and frequency.
+- **`UNIQUES.LAT`** holds fully inflected irregular forms, such as *agatur*, that don't fit the
+  stem-plus-ending scheme.
+- **`ADDONS.LAT`** holds prefixes, suffixes and tackons (`-que`, `-ne`, `ec-`, and so on).
+
+`WORD.MOD` and `WORD.MDV` store settings as plain `NAME Y/N` lines (see
+`test/WORD.MDV_template`). ben-crowell also lets you set them with the `WHITAKER_USER` and
+`WHITAKER_DEV` environment variables.
+
+For a paradigm generator, only `DICTLINE.GEN`, `INFLECTS.LAT` and `UNIQUES.LAT` matter.
+Everything else is either a compiled index for the parser or a runtime setting.
 
 ## Closer to the original
 

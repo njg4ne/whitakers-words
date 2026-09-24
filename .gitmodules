@@ -1,3 +1,6 @@
 [submodule "submodules/ben-crowell"]
 	path = submodules/ben-crowell
 	url = https://bitbucket.org/ben-crowell/whitakers-words.git
+[submodule "submodules/mk270"]
+	path = submodules/mk270
+	url = git@github.com:mk270/whitakers-words.git

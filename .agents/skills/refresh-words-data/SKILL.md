@@ -8,11 +8,16 @@ description: Update the bundled Whitaker's Words data in word_form_enumerator/da
 The enumerator reads only `word_form_enumerator/data/`. The submodules are
 reference copies, so a refresh is a deliberate copy.
 
-1. **Update the reference fork.**
+1. **Update the reference fork.** `submodules/mk270` tracks the user's fork
+   (`origin` = `njg4ne/whitakers-words`, branch `main`). The original project is
+   the remote `upstream` (`mk270/whitakers-words`, branch `master`).
    ```sh
-   git -C submodules/mk270 fetch && git -C submodules/mk270 log --oneline HEAD..origin/master
-   git -C submodules/mk270 checkout origin/master
+   S=submodules/mk270
+   git -C $S fetch upstream && git -C $S log --oneline HEAD..upstream/master
+   git -C $S merge --ff-only upstream/master   # then push main to origin, if the user agrees
    ```
+   If the SSH agent isn't set up for `origin`, prefix the commands with
+   `SSH_AUTH_SOCK=$(launchctl getenv SSH_AUTH_SOCK)`.
    Read the commit list for data changes (`DICTLINE.GEN`, `INFLECTS.LAT`,
    `UNIQUES.LAT`) and for engine changes to the rules ported in `rules.py` (see
    `AGENTS.md` for the mapping). An engine change may need porting: use the

@@ -1,0 +1,3 @@
+[submodule "submodules/ben-crowell"]
+	path = submodules/ben-crowell
+	url = https://bitbucket.org/ben-crowell/whitakers-words.git

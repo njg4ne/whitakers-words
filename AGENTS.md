@@ -12,8 +12,12 @@ line. The larger goal, in another project, is to go from a lemma (*ago, agere*;
 *mater, matris*) to all of its forms. The flat list is the first deliverable, and
 a lemma → forms lookup is the likely next one.
 
-- `submodules/mk270` (GitHub) and `submodules/ben-crowell` (Bitbucket) are the
-  two maintained forks of the Ada source. They are **reference only**: the
+- This repo lives at `git@github.com:njg4ne/whitakers-words.git`, branch
+  `main`. GitHub still lists it as a fork of mk270, but its `main` holds this
+  project, not the Ada code. Use `main` for new branches here, never `master`.
+- `submodules/mk270` (GitHub, upstream branch `master`; the local branch is
+  named `main`) and `submodules/ben-crowell` (Bitbucket) are the two maintained
+  forks of the Ada source. They are **reference only**: the
   enumerator never reads them at runtime.
 - `word_form_enumerator/data/` holds `DICTLINE.GEN`, `INFLECTS.LAT`,
   `UNIQUES.LAT` and `LICENCE.txt`, copied unchanged from mk270 at `1f2f0fb`.

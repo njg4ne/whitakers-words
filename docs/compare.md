@@ -38,7 +38,6 @@ forks now differ in both code and data, so choosing a base means comparing them 
 Two forks are compared here:
 
 - `submodules/mk270` is Martin Keegan's cleanup of Whitaker's Ada source, hosted on GitHub.
-  The submodule tracks our fork of it, `njg4ne/whitakers-words` (branch `main`).
 - `submodules/ben-crowell` is Ben Crowell's 2024 fork of mk270, hosted on Bitbucket.
 
 The forks split at `9b11477` (2023-02-23). Since then mk270 has 46 commits and was last

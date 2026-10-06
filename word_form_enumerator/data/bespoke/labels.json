@@ -1,0 +1,62 @@
+{
+  "case": {
+    "NOM": "nominative",
+    "GEN": "genitive",
+    "DAT": "dative",
+    "ACC": "accusative",
+    "ABL": "ablative",
+    "VOC": "vocative",
+    "LOC": "locative"
+  },
+  "number": {
+    "S": "singular",
+    "P": "plural"
+  },
+  "gender": {
+    "M": "masculine",
+    "F": "feminine",
+    "N": "neuter"
+  },
+  "tense": {
+    "PRES": "present",
+    "IMPF": "imperfect",
+    "FUT": "future",
+    "PERF": "perfect",
+    "PLUP": "pluperfect",
+    "FUTP": "future perfect"
+  },
+  "voice": {
+    "ACTIVE": "active",
+    "PASSIVE": "passive"
+  },
+  "mood": {
+    "IND": "indicative",
+    "SUB": "subjunctive",
+    "IMP": "imperative",
+    "INF": "infinitive",
+    "PPL": "participle",
+    "SUPINE": "supine"
+  },
+  "person": {
+    "1": "1st person",
+    "2": "2nd person",
+    "3": "3rd person"
+  },
+  "comparison": {
+    "POS": "positive",
+    "COMP": "comparative",
+    "SUPER": "superlative"
+  },
+  "sort": {
+    "CARD": "cardinal",
+    "ORD": "ordinal",
+    "DIST": "distributive",
+    "ADVERB": "numeral adverb"
+  },
+  "gender_abbreviation": {
+    "M": "m.",
+    "F": "f.",
+    "N": "n.",
+    "C": "m./f."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "noun": ["N"],
+  "verb": ["V"],
+  "adjective": ["ADJ"],
+  "pronoun": ["PRON", "PACK"],
+  "adverb": ["ADV"],
+  "preposition": ["PREP"],
+  "conjunction": ["CONJ"],
+  "interjection": ["INTERJ"],
+  "numeral": ["NUM"],
+  "cardinal": ["NUM"],
+  "ordinal": ["NUM"],
+  "enclitic": [],
+  "prefix": []
+}

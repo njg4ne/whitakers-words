@@ -41,14 +41,18 @@ class Entry:
     sort: str = "X"
     case: str = "X"
     meaning: str = ""
+    freq: str = "X"  # A most common ... F very rare (4th of the 5 flags)
+    line: int = 0  # line number in DICTLINE.GEN; 0 for ESSE
 
 
 # esse is not in DICTLINE; the Ada build adds it (makedict_main.adb, Be_Ve).
 # Its second stem is deliberately empty so that "" + "es" gives "es".
-ESSE = Entry(stems=("s", "", "fu", "fut"), pos="V", decl=(5, 1), kind="TO_BE")
+ESSE = Entry(
+    stems=("s", "", "fu", "fut"), pos="V", decl=(5, 1), kind="TO_BE", freq="A"
+)
 
 
-def parse_line(line: str) -> Entry:
+def parse_line(line: str, number: int = 0) -> Entry:
     stems = tuple(
         line[i * STEM_WIDTH:(i + 1) * STEM_WIDTH].strip() for i in range(STEM_SLOTS)
     )
@@ -62,15 +66,20 @@ def parse_line(line: str) -> Entry:
     if "which" in fields:
         decl = (int(fields.pop("which")), int(fields.pop("var")))
     fields.pop("value", None)
-    return Entry(stems=stems, pos=pos, decl=decl, meaning=meaning, **fields)
+    flags = tokens[len(names):len(names) + FLAG_COUNT]
+    freq = flags[3] if len(flags) > 3 else "X"
+    return Entry(
+        stems=stems, pos=pos, decl=decl, meaning=meaning, freq=freq, line=number,
+        **fields,
+    )
 
 
 def read_entries(path: Path) -> Iterator[Entry]:
     with path.open(encoding="latin-1") as f:
-        for line in f:
+        for number, line in enumerate(f, 1):
             line = line.rstrip("\r\n")
             if line.strip():
-                yield parse_line(line)
+                yield parse_line(line, number)
     yield ESSE
 
 
@@ -102,8 +111,9 @@ def _usable(pairs: list[tuple[int, str]]) -> list[tuple[int, str]]:
     return [(key, stem) for key, stem in pairs if stem and stem != ZZZ]
 
 
-def pack_tackon(entry: Entry) -> str:
-    """The tackon a PACK entry takes, from a meaning like "(w/-cumque) ..."."""
+def tackon(entry: Entry) -> str:
+    """The tackon an entry always takes, from a meaning like "(w/-cumque) ..."
+    or "(w/-dem ONLY, idem, eadem, idem) ...". Empty for most entries."""
     if not entry.meaning.startswith("(w/-"):
         return ""
     return entry.meaning[4:].split(")")[0].split()[0]

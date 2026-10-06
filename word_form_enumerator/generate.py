@@ -2,7 +2,7 @@
 
 from collections.abc import Iterator
 
-from .dictline import Entry, keyed_stems, pack_tackon
+from .dictline import Entry, keyed_stems, tackon
 from .inflects import Ending
 from .rules import ending_fits, pack_ending_fits, verb_form_allowed
 
@@ -21,30 +21,40 @@ def candidate_endings(entry: Entry, groups: EndingGroups) -> list[Ending]:
 
 def forms_of(entry: Entry, groups: EndingGroups) -> list[str]:
     """All distinct forms of one entry, in the order they were generated."""
+    return list(dict.fromkeys(form for form, _ in tagged_forms_of(entry, groups)))
+
+
+def tagged_forms_of(entry: Entry, groups: EndingGroups) -> Iterator[tuple[str, Ending]]:
+    """Each form of one entry with the ending that made it. A form recurs
+    once per ending that spells it (amici: GEN S and NOM P)."""
     endings = candidate_endings(entry, groups)
     if entry.pos == "PACK":
-        forms = _pack_forms(entry, endings)
+        pairs = _pack_forms(entry, endings)
     else:
-        forms = (
-            stem + ending.text
+        pairs = (
+            (stem + ending.text, ending)
             for key, stem in keyed_stems(entry)
             for ending in endings
             if ending_fits(entry, key, ending)
             and verb_form_allowed(entry, stem, ending)
         )
-    return [form for form in dict.fromkeys(forms) if form]
+        # idem is "i" + dem. INFLECTS already spells these PRON 4 2 endings
+        # for -dem (eun + dem -> eundem), so the bare forms aren't words.
+        if entry.pos == "PRON" and tackon(entry):
+            pairs = ((form + tackon(entry), ending) for form, ending in pairs)
+    return ((form, ending) for form, ending in pairs if form)
 
 
-def _pack_forms(entry: Entry, endings: list[Ending]) -> Iterator[str]:
+def _pack_forms(entry: Entry, endings: list[Ending]) -> Iterator[tuple[str, Ending]]:
     """qu- pronoun + ending + tackon, e.g. cu + ius + cumque."""
-    tackon = pack_tackon(entry)
-    if not tackon:
+    tack = tackon(entry)
+    if not tack:
         return
     for key, stem in keyed_stems(entry):
         for ending in endings:
             if pack_ending_fits(entry, key, ending):
                 form = stem + ending.text
                 # m becomes n before -dam: quem + dam -> quendam
-                if tackon.startswith("dam") and form.endswith("m"):
+                if tack.startswith("dam") and form.endswith("m"):
                     form = form[:-1] + "n"
-                yield form + tackon
+                yield form + tack, ending

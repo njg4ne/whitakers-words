@@ -47,13 +47,15 @@ class Ending:
     voice: str = "X"
     mood: str = "X"
     person: int = 0
+    age: str = "X"  # A archaic ... C classical ... H modern; X any
+    freq: str = "X"  # A most common ... F very rare
 
 
 def parse_line(line: str) -> Ending | None:
     tokens = line.split("--")[0].split()
     if not tokens:
         return None
-    pos = tokens[0]
+    pos, age, freq = tokens[0], tokens[-2], tokens[-1]
     if tokens[-3].isdigit():  # length 0: no ending text
         text, key, middle = "", int(tokens[-4]), tokens[1:-4]
     else:
@@ -65,7 +67,7 @@ def parse_line(line: str) -> Ending | None:
     tags = dict(zip(TAG_FIELDS[pos], middle, strict=True))
     if "person" in tags:
         tags["person"] = int(tags["person"])
-    return Ending(pos=pos, decl=decl, key=key, text=text, **tags)
+    return Ending(pos=pos, decl=decl, key=key, text=text, age=age, freq=freq, **tags)
 
 
 def load_endings(path: Path) -> dict[tuple[str, int | None], list[Ending]]:

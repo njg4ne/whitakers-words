@@ -13,14 +13,22 @@ reference, limitations, and how the data fits.
 
 ## Install
 
+From the release's source zip, with no Git needed:
+
 ```sh
-pip install https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.0.zip
-uv add https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.0.zip
+pip install https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.1.zip
+uv add https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.1.zip
 ```
 
-Install from the tag's zip, not with `git+https://...`: a Git install also
-clones the submodules, and one of them has an SSH URL. Or clone the repo and
-run from its root, with no install.
+Or with Git, which also downloads the two Ada forks in `submodules/` (they
+aren't installed or used, just fetched):
+
+```sh
+pip install "git+https://github.com/njg4ne/whitakers-words.git@v0.2.1"
+uv add "git+https://github.com/njg4ne/whitakers-words.git@v0.2.1"
+```
+
+Or clone the repo and run from its root, with no install.
 
 ## Quick start
 
@@ -55,8 +63,8 @@ See [Looking up one word](docs/lookup.md) for what the rows hold, and
 | `AGENTS.md`, `.agents/skills/` | Notes for AI coding agents working in the repo |
 
 The submodules are only needed to read or build the Ada. To fetch them:
-`git submodule update --init`. The mk270 one uses an SSH URL, so it needs
-GitHub SSH keys.
+`git submodule update --init`. Both use HTTPS URLs, so no SSH keys are
+needed.
 
 ### Example scripts
 

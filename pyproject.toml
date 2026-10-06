@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "omnes-formae"
-version = "0.2.0"
+version = "0.2.1"
 description = "Every inflected Latin form in Whitaker's Words, and a tagged lookup"
 readme = "README.md"
 license = "AGPL-3.0-or-later"

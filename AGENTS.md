@@ -17,7 +17,9 @@ line, and looks up every tagged form of one vocab-list word
 - `submodules/mk270` (GitHub, upstream branch `master`; the local branch is
   named `main`) and `submodules/ben-crowell` (Bitbucket) are the two maintained
   forks of the Ada source. They are **reference only**: the
-  package never reads them at runtime.
+  package never reads them at runtime. Keep both `.gitmodules` URLs
+  `https://`: `git+https` installs clone them, and an SSH URL breaks those
+  for anyone without GitHub keys.
 - `omnes_formae/data/whitaker/` holds `DICTLINE.GEN`, `INFLECTS.LAT`,
   `UNIQUES.LAT` and `LICENCE.txt`, copied unchanged from mk270 at `1f2f0fb`.
   `data/bespoke/` holds our own data (tag labels, part-of-speech words); keep

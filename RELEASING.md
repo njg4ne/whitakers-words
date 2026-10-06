@@ -2,8 +2,7 @@
 
 How `omnes_formae` is made installable from GitHub, from a dev PC,
 with no CI and nothing beyond setuptools (or uv). v0.2.0 was the first
-release made this way. The older `v0.1.0` tag predates packaging and has no
-`pyproject.toml`, so it can't be installed.
+release made this way.
 
 ## Why not GitHub Packages
 
@@ -23,7 +22,7 @@ is needed: pip installs from a URL.
 
    [project]
    name = "omnes-formae"
-   version = "0.2.0"
+   version = "0.2.1"
    description = "Every inflected Latin form in Whitaker's Words, and a tagged lookup"
    requires-python = ">=3.10"
    license = "AGPL-3.0-or-later"
@@ -49,32 +48,33 @@ is needed: pip installs from a URL.
 2. **Publish a version** by tagging and pushing:
 
    ```sh
-   git tag v0.2.0
-   git push origin v0.2.0
+   git tag v0.2.1
+   git push origin v0.2.1
    ```
 
-3. **Install from the tag's source zip:**
+3. **Install from the tag's source zip, or with Git:**
 
    ```sh
-   pip install https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.0.zip
-   uv pip install https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.0.zip
-   uv add https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.0.zip
+   pip install https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.1.zip
+   uv pip install https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.1.zip
+   uv add https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.1.zip
+   pip install "git+https://github.com/njg4ne/whitakers-words.git@v0.2.1"
+   uv add "git+https://github.com/njg4ne/whitakers-words.git@v0.2.1"
    ```
 
-   pip builds the package on the user's machine from `pyproject.toml`. Users
-   don't need Git, and the zip leaves out the submodules.
+   pip builds the package on the user's machine from `pyproject.toml`. The
+   zip needs no Git and leaves out the submodules.
 
 To release a new version: bump `version` in `pyproject.toml`, commit, tag, push.
 
-## Why the zip, not `git+https://...`
+## Zip or Git
 
-`pip install "git+https://github.com/njg4ne/whitakers-words.git@v0.2.0"` also
-works in principle, but pip initializes Git submodules when it installs from
-a Git URL. Here that means cloning both Ada forks, and the mk270 one is
-registered with an SSH URL (`git@github.com:...` in `.gitmodules`), which
-fails for anyone without GitHub SSH keys. The zip avoids all of that. If
-`git+` installs are wanted anyway, change that submodule URL to `https://`
-first, and accept the extra download (including one from Bitbucket).
+pip and uv clone a repo's submodules when they install from a Git URL, so a
+`git+https://` install also fetches both Ada forks (one from Bitbucket). They
+aren't installed; it only costs a few seconds. Both submodules must stay
+registered with `https://` URLs in `.gitmodules`: before v0.2.1 the mk270 one
+used `git@github.com:...`, and Git installs failed for anyone without GitHub
+SSH keys. The zip needs neither Git nor the submodules.
 
 ## Before the first release
 
@@ -106,7 +106,7 @@ do).
 ## Fallback: a wheel on a GitHub Release
 
 If building on the user's machine is ever a problem, run `uv build` locally
-and attach `dist/omnes_formae-0.2.0-py3-none-any.whl` to the v0.2.0
+and attach `dist/omnes_formae-0.2.1-py3-none-any.whl` to the v0.2.1
 release in GitHub's web UI. Users then install that file's download URL with
 pip. This adds a manual upload to each release, so start with the zip.
 

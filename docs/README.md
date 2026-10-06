@@ -12,11 +12,19 @@ bundled in the package.
 
 ## Install
 
-Install a tagged release from its source zip (no Git needed):
+From the release's source zip, with no Git needed:
 
 ```sh
-pip install https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.0.zip
-uv add https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.0.zip
+pip install https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.1.zip
+uv add https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.1.zip
+```
+
+Or with Git, which also downloads the two Ada forks in `submodules/` (they
+aren't installed or used, just fetched):
+
+```sh
+pip install "git+https://github.com/njg4ne/whitakers-words.git@v0.2.1"
+uv add "git+https://github.com/njg4ne/whitakers-words.git@v0.2.1"
 ```
 
 Or clone [the repo](https://github.com/njg4ne/whitakers-words) and run the

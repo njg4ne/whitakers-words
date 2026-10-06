@@ -37,19 +37,45 @@ One dict per (form, grammatical slot). See docs/lookup.md for every key. An empt
 The data is loaded on the first call (a fraction of a second) and kept,
 so later calls, one word or thousands, take about a millisecond each.
 
+### `iter_tagged_forms`
+
+```python
+iter_tagged_forms(
+    data_dir: Path = WHITAKER_DIR,
+    progress: Callable[[int, int], None] | None = None,
+) -> Iterator[dict]
+```
+
+Every tagged form of every word in the dictionary, as rows.
+
+The rows have the same keys as get_latin_forms's, and come word by
+word in dictionary order. With no vocab entry to name a word, each row's
+"root" is the word's dictionary heading, the same as its "lemma".
+Homographs aren't merged: caelum "heaven" and caelum "chisel" each get
+their own rows.
+
+The words are read into memory (a fraction of a second); the rows are
+made one word at a time, so they can be written out as they come. If
+given, progress(done, total) is called after each word.
+
 ### `write_forms`
 
 ```python
 write_forms(
     out_path: Path,
     data_dir: Path = WHITAKER_DIR,
+    format: str = 'txt',
+    progress: Callable[[int, int], None] | None = None,
 ) -> int
 ```
 
-Write every form to out_path, one per line, and return the line count.
+Write every form to out_path and return how many forms or rows.
 
-Forms are unique within an entry, but the same spelling can come from
-several entries; pipe the result through `sort -u` to deduplicate.
+**Args**
+
+
+- `format`: "txt" writes one form per line. Forms are unique within an entry, but the same spelling can come from several entries; pipe the result through `sort -u` to deduplicate. "csv" and "json" write one row per (form, tag) of every word, with the keys of get_latin_forms's rows (see iter_tagged_forms): a CSV with ROW_KEYS as its header, or a JSON array of objects.
+- `progress`: if given, called as progress(done, total) as the run works through the dictionary's entries (txt) or words (csv, json). The command line uses it to draw a progress bar.
 
 ### `iter_forms`
 
@@ -130,23 +156,33 @@ Age_Type: when a form was in use (a row's "form_age").
 
 Each member is a `str` equal to its code: `PartOfSpeech.VERB == "V"`, and `str()` and JSON give the code.
 
+## `ROW_KEYS`
+
+Every key a row can have, in table order: `word`, `root`, `lemma`, `meaning`, `pos`, `tag`, `case`, `number`, `gender`, `tense`, `voice`, `mood`, `person`, `comparison`, `sort`, `lemma_frequency`, `form_frequency`, `form_age`, `entry_id`, `entry_ids`. The CSV format uses them as its header, and the JSON format writes them in this order. The grammar keys, `case` to `sort`, are in a row only when they apply (empty cells in the CSV). In the CSV, `entry_ids` is space-separated.
+
 ## `WHITAKER_DIR`
 
 The folder of bundled Whitaker data files (`DICTLINE.GEN`, `INFLECTS.LAT`, `UNIQUES.LAT`), inside the installed package. It is the default `data_dir` of every function above; pass another folder with the same files to use other data.
 
 ## Command line
 
-Write the flat list of forms:
+Write every form, as a list or as tagged rows:
 
 ```text
-usage: python -m omnes_formae [-h] [-o OUTPUT] [--data-dir DATA_DIR]
+usage: python -m omnes_formae [-h] [-f {txt,csv,json}] [-o OUTPUT]
+                              [--data-dir DATA_DIR] [--no-progress]
 
-Write every Latin form in Whitaker's Words, one per line.
+Write every Latin form in Whitaker's Words: one per line (txt), or one row per
+form and tag with the lookup's keys (csv, json).
 
 options:
-  -h, --help           show this help message and exit
-  -o, --output OUTPUT
-  --data-dir DATA_DIR  folder with DICTLINE.GEN, INFLECTS.LAT and UNIQUES.LAT
+  -h, --help            show this help message and exit
+  -f, --format {txt,csv,json}
+                        output format (default: txt)
+  -o, --output OUTPUT   output file (default: forms.FORMAT)
+  --data-dir DATA_DIR   folder with DICTLINE.GEN, INFLECTS.LAT and UNIQUES.LAT
+  --no-progress         no progress bar (it is shown only when stderr is a
+                        terminal)
 ```
 
 Once the package is installed, `omnes-formae` runs the same command.

@@ -2,6 +2,7 @@
 
 - write_forms / iter_forms: the flat list of every form (all_forms.py).
 - get_latin_forms: every form of one vocab-list word, tagged (lookup.py).
+- iter_tagged_forms: the same rows for every word in the dictionary.
 - PartOfSpeech, Frequency, Age: Whitaker's codes as enums (codes.py).
 
 See docs/ (the docs site) for usage, and docs/data.md for how the data files relate.
@@ -9,15 +10,17 @@ See docs/ (the docs site) for usage, and docs/data.md for how the data files rel
 
 from .all_forms import iter_forms, write_forms
 from .codes import Age, Frequency, PartOfSpeech
-from .lookup import get_latin_forms
+from .lookup import ROW_KEYS, get_latin_forms, iter_tagged_forms
 from .paths import WHITAKER_DIR
 
 __all__ = [
+    "ROW_KEYS",
     "WHITAKER_DIR",
     "Age",
     "Frequency",
     "PartOfSpeech",
     "get_latin_forms",
+    "iter_tagged_forms",
     "iter_forms",
     "write_forms",
 ]

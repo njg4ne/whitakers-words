@@ -2,6 +2,7 @@
 - [Looking up one word](lookup.md)
 - [API reference](api.md)
 - [Limitations](limitations.md)
+- [Changelog](changelog.md)
 - [How it works](how-it-works.md)
 - [How the data fits](data.md)
 - [Background: the source forks](compare.md)

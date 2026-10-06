@@ -20,13 +20,13 @@ forms are appended.
 
 | Module | Role |
 |---|---|
-| `all_forms.py` | `write_forms` / `iter_forms`: runs everything and streams the flat list |
+| `all_forms.py` | `write_forms` / `iter_forms`: runs everything and streams the flat list, or the tagged rows as CSV or JSON |
 | `dictline.py` | Reads dictionary entries and pairs each stem with its key |
 | `inflects.py` | Reads the ending table |
 | `rules.py` | Decides which endings fit which stems (ported from the Ada) |
 | `generate.py` | Builds one entry's forms, with the ending that made each |
 | `uniques.py` | Reads the irregular forms |
-| `lookup.py` | `get_latin_forms`: finds the word an entry names, and lists its forms |
+| `lookup.py` | `get_latin_forms`: finds the word an entry names, and lists its forms; `iter_tagged_forms`: the same rows for every word |
 | `spelling.py` | Finds the Latin words in a vocab entry, and compares spellings |
 | `words.py` | Groups the data's lines into dictionary words |
 | `citation.py` | A word's citation form and dictionary heading |

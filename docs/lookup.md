@@ -37,6 +37,10 @@ takes about a millisecond, so looking up a whole vocab list is quick.
 
 ## The keys of each row
 
+The same rows, for every word in the dictionary, come from
+`iter_tagged_forms()` or `omnes-formae -f csv` (or `-f json`): see
+[Tagged rows](/?id=tagged-rows-csv-or-json).
+
 | Key | Example | Meaning |
 |---|---|---|
 | `word` | `"amabat"` | the form |

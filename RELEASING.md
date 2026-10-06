@@ -22,7 +22,7 @@ is needed: pip installs from a URL.
 
    [project]
    name = "omnes-formae"
-   version = "0.2.1"
+   version = "0.3.0"
    description = "Every inflected Latin form in Whitaker's Words, and a tagged lookup"
    requires-python = ">=3.10"
    license = "AGPL-3.0-or-later"
@@ -48,31 +48,33 @@ is needed: pip installs from a URL.
 2. **Publish a version** by tagging and pushing:
 
    ```sh
-   git tag v0.2.1
-   git push origin v0.2.1
+   git tag v0.3.0
+   git push origin v0.3.0
    ```
 
 3. **Install from the tag's source zip, or with Git:**
 
    ```sh
-   pip install https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.1.zip
-   uv pip install https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.1.zip
-   uv add https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.1.zip
-   pip install "git+https://github.com/njg4ne/whitakers-words.git@v0.2.1"
-   uv add "git+https://github.com/njg4ne/whitakers-words.git@v0.2.1"
+   pip install https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.3.0.zip
+   uv pip install https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.3.0.zip
+   uv add https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.3.0.zip
+   pip install "git+https://github.com/njg4ne/whitakers-words.git@v0.3.0"
+   uv add "git+https://github.com/njg4ne/whitakers-words.git@v0.3.0"
    ```
 
    pip builds the package on the user's machine from `pyproject.toml`. The
    zip needs no Git and leaves out the submodules.
 
-To release a new version: bump `version` in `pyproject.toml`, commit, tag, push.
+To release a new version: bump `version` in `pyproject.toml` and the install
+URLs in `README.md` and `docs/README.md`, add the release to `CHANGELOG.md`,
+run `python3 build_docs.py`, then commit, tag and push.
 
 ## Zip or Git
 
 pip and uv clone a repo's submodules when they install from a Git URL, so a
 `git+https://` install also fetches both Ada forks (one from Bitbucket). They
 aren't installed; it only costs a few seconds. Both submodules must stay
-registered with `https://` URLs in `.gitmodules`: before v0.2.1 the mk270 one
+registered with `https://` URLs in `.gitmodules`: before v0.3.0 the mk270 one
 used `git@github.com:...`, and Git installs failed for anyone without GitHub
 SSH keys. The zip needs neither Git nor the submodules.
 
@@ -106,7 +108,7 @@ do).
 ## Fallback: a wheel on a GitHub Release
 
 If building on the user's machine is ever a problem, run `uv build` locally
-and attach `dist/omnes_formae-0.2.1-py3-none-any.whl` to the v0.2.1
+and attach `dist/omnes_formae-0.3.0-py3-none-any.whl` to the v0.3.0
 release in GitHub's web UI. Users then install that file's download URL with
 pip. This adds a manual upload to each release, so start with the zip.
 

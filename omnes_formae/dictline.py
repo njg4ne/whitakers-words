@@ -83,6 +83,12 @@ def read_entries(path: Path) -> Iterator[Entry]:
     yield ESSE
 
 
+def count_entries(path: Path) -> int:
+    """How many entries read_entries yields, without parsing them."""
+    with path.open(encoding="latin-1") as f:
+        return sum(1 for line in f if line.strip()) + 1  # + ESSE
+
+
 def keyed_stems(entry: Entry) -> list[tuple[int, str]]:
     """Pair each usable stem with the key that INFLECTS endings refer to.
 

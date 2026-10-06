@@ -9,6 +9,7 @@ turns Jekyll off). Most pages, and _sidebar.md, are edited in place. This
 script writes the two that come from elsewhere:
 
 - limitations.md: copied from LIMITATIONS.md.
+- changelog.md: copied from CHANGELOG.md.
 - api.md: the public API, from the package's docstrings and CLI help.
 """
 
@@ -120,9 +121,10 @@ def api() -> str:
         "```python\nfrom omnes_formae import get_latin_forms, PartOfSpeech\n```\n\n",
         "See [Looking up one word](lookup.md) for examples and the keys of each row.\n",
     ]
-    functions = ["get_latin_forms", "write_forms", "iter_forms"]
+    functions = ["get_latin_forms", "iter_tagged_forms", "write_forms", "iter_forms"]
     enums = ["PartOfSpeech", "Frequency", "Age"]
-    assert set(package.__all__) == {*functions, *enums, "WHITAKER_DIR"}, package.__all__
+    constants = {"WHITAKER_DIR", "ROW_KEYS"}
+    assert set(package.__all__) == {*functions, *enums, *constants}, package.__all__
 
     parts.append("\n## Functions\n")
     for name in functions:
@@ -142,6 +144,15 @@ def api() -> str:
         "and `str()` and JSON give the code.\n"
     )
 
+    keys = ", ".join(f"`{key}`" for key in package.ROW_KEYS)
+    parts.append(
+        "\n## `ROW_KEYS`\n\n"
+        f"Every key a row can have, in table order: {keys}. The CSV format "
+        "uses them as its header, and the JSON format writes them in this order. "
+        "The grammar keys, `case` to `sort`, are in a row only when they apply "
+        "(empty cells in the CSV). In the CSV, `entry_ids` is space-separated.\n"
+    )
+
     parts.append(
         "\n## `WHITAKER_DIR`\n\n"
         "The folder of bundled Whitaker data files (`DICTLINE.GEN`, `INFLECTS.LAT`, "
@@ -150,7 +161,8 @@ def api() -> str:
         "other data.\n"
     )
 
-    parts.append("\n## Command line\n\nWrite the flat list of forms:\n\n")
+    parts.append("\n## Command line\n\n")
+    parts.append("Write every form, as a list or as tagged rows:\n\n")
     parts.append(cli_help("omnes_formae"))
     parts.append(
         "\nOnce the package is installed, `omnes-formae` runs the same command.\n\n"
@@ -164,6 +176,7 @@ def api() -> str:
 def pages() -> dict[Path, str]:
     return {
         DOCS / "limitations.md": copied("LIMITATIONS.md"),
+        DOCS / "changelog.md": copied("CHANGELOG.md"),
         DOCS / "api.md": api(),
     }
 

@@ -40,9 +40,12 @@ line, and looks up every tagged form of one vocab-list word
 - **Stream the output.** Hold only the ~1,800 endings in memory. Read
   `DICTLINE` a line at a time, and write each entry's forms through Python's
   buffered file. There is no global deduplication, because that would hold
-  every form in memory; users run `sort -u`.
-- **The output is words only.** No tags or lemma, and two-word compound tenses
-  (*amatus est*) are left out.
+  every form in memory; users run `sort -u`. The csv and json formats hold
+  the grouped words (`read_words`) but still write rows as they come.
+- **The default output is words only** (`--format txt`): no tags or lemma.
+  `--format csv`/`json` write `iter_tagged_forms`'s rows instead: the lookup's
+  keys (`lookup.ROW_KEYS`), for every word, unmerged, with `root` = `lemma`.
+  Two-word compound tenses (*amatus est*) are left out of all formats.
 - **Tagged lookup is separate.** `get_latin_forms(word, pos)` returns one
   dict per (form, tag) for the word that a vocab-list entry names: the root,
   not every word the spelling could be a form of (that's what the Ada parser
@@ -120,8 +123,9 @@ user runs it; don't install it or fetch it with `uvx` without asking.
 - **Docs style:** the docs in `docs/` are short and factual. Check every claim
   against the files or the source before writing it.
 - **Docs site:** `docs/` is served by GitHub Pages as a docsify site (no
-  build). `docs/api.md` and `docs/limitations.md` are generated: edit the
-  docstrings or `LIMITATIONS.md` and run `python3 build_docs.py`. The other
+  build). `docs/api.md`, `docs/limitations.md` and `docs/changelog.md` are
+  generated: edit the docstrings, `LIMITATIONS.md` or `CHANGELOG.md` and run
+  `python3 build_docs.py`. Add user-visible changes to `CHANGELOG.md`. The other
   pages are hand-written. The root `README.md` covers the repo (install,
   layout, developing) and links to the site for package details. The user
   deploys Pages and makes releases (`RELEASING.md`); don't tag or push.

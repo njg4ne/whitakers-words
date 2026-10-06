@@ -16,16 +16,16 @@ reference, limitations, and how the data fits.
 From the release's source zip, with no Git needed:
 
 ```sh
-pip install https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.1.zip
-uv add https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.2.1.zip
+pip install https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.3.0.zip
+uv add https://github.com/njg4ne/whitakers-words/archive/refs/tags/v0.3.0.zip
 ```
 
 Or with Git, which also downloads the two Ada forks in `submodules/` (they
 aren't installed or used, just fetched):
 
 ```sh
-pip install "git+https://github.com/njg4ne/whitakers-words.git@v0.2.1"
-uv add "git+https://github.com/njg4ne/whitakers-words.git@v0.2.1"
+pip install "git+https://github.com/njg4ne/whitakers-words.git@v0.3.0"
+uv add "git+https://github.com/njg4ne/whitakers-words.git@v0.3.0"
 ```
 
 Or clone the repo and run from its root, with no install.
@@ -35,6 +35,7 @@ Or clone the repo and run from its root, with no install.
 ```sh
 omnes-formae                    # or: python3 -m omnes_formae
 sort -u forms.txt -o forms.txt  # the same spelling can come from several words
+omnes-formae -f csv             # every form with its tags (also: -f json)
 ```
 
 ```python
@@ -58,6 +59,7 @@ See [Looking up one word](docs/lookup.md) for what the rows hold, and
 | `docs/` | The docs site (docsify, served by GitHub Pages from this folder) |
 | `build_docs.py` | Writes the site's generated pages |
 | `example.py`, `vocab_forms.py`, `wheelock_forms.py`, `known_issues.py` | Example scripts, below |
+| `CHANGELOG.md` | What each release changed (also on the docs site) |
 | `LICENSE` | The AGPL v3 licence, which covers the code |
 | `pyproject.toml` | Package metadata; [RELEASING.md](RELEASING.md) covers releases |
 | `AGENTS.md`, `.agents/skills/` | Notes for AI coding agents working in the repo |
@@ -83,10 +85,10 @@ Run these from the repo root.
   before it, then `--compare before.txt` after. It regenerates the list,
   checks known forms and lookups, and lists what changed.
 - **Lint:** `ruff check --select E,F,I,UP,B omnes_formae`.
-- **Docs:** edit `docs/*.md` directly, except `docs/api.md` and
-  `docs/limitations.md`, which `python3 build_docs.py` writes from the
-  docstrings and `LIMITATIONS.md`. Rerun it after changing either;
-  `--check` reports pages that are out of date. To preview the site, run
+- **Docs:** edit `docs/*.md` directly, except `docs/api.md`,
+  `docs/limitations.md` and `docs/changelog.md`, which `python3 build_docs.py`
+  writes from the docstrings, `LIMITATIONS.md` and `CHANGELOG.md`. Rerun it
+  after changing any of them; `--check` reports pages that are out of date. To preview the site, run
   `python3 -m http.server -d docs` and open <http://localhost:8000>.
 - **Release:** see [RELEASING.md](RELEASING.md).
 

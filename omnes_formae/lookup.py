@@ -18,6 +18,7 @@ word, so the distinct tags can be the options of a multi-select.
 """
 
 import json
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
@@ -35,6 +36,18 @@ from .words import Word, read_words
 # English part-of-speech words -> PartOfSpeech codes. Several may apply, as
 # in Wheelock's "adjective, cardinal". See data/bespoke/README.md.
 POS_WORDS = json.loads((BESPOKE_DIR / "pos_words.json").read_text(encoding="utf-8"))
+
+# Called as progress(done, total) while a long run works through the words.
+Progress = Callable[[int, int], None]
+
+# Every key a row can have, in the order a table shows them. The grammar
+# keys (case to sort) are present only when they apply.
+ROW_KEYS = (
+    "word", "root", "lemma", "meaning", "pos", "tag",
+    "case", "number", "gender", "tense", "voice", "mood", "person",
+    "comparison", "sort",
+    "lemma_frequency", "form_frequency", "form_age", "entry_id", "entry_ids",
+)
 
 
 def get_latin_forms(
@@ -77,6 +90,29 @@ def get_latin_forms(
 
     row_lists = [list(_rows(word, *match)) for match in matches]
     return _merge_same_forms(row_lists)
+
+
+def iter_tagged_forms(
+    data_dir: Path = WHITAKER_DIR, progress: Progress | None = None
+) -> Iterator[dict]:
+    """Every tagged form of every word in the dictionary, as rows.
+
+    The rows have the same keys as get_latin_forms's, and come word by
+    word in dictionary order. With no vocab entry to name a word, each row's
+    "root" is the word's dictionary heading, the same as its "lemma".
+    Homographs aren't merged: caelum "heaven" and caelum "chisel" each get
+    their own rows.
+
+    The words are read into memory (a fraction of a second); the rows are
+    made one word at a time, so they can be written out as they come. If
+    given, progress(done, total) is called after each word.
+    """
+    groups = load_endings(data_dir / "INFLECTS.LAT")
+    words = read_words(data_dir)
+    for done, word in enumerate(words, 1):
+        yield from _rows(None, word, word.tagged_forms(groups))
+        if progress:
+            progress(done, len(words))
 
 
 def pos_codes(pos: str | PartOfSpeech | None) -> set[str] | None:
@@ -219,14 +255,22 @@ def _merge_same_forms(row_lists: list[list[dict]]) -> list[dict]:
     return [row for rows in merged.values() for row in rows]
 
 
-def _rows(root: str, word: Word, tagged: TaggedForms, cited: list[Ending]):
-    """One row per (form, tag) of the word, without repeats."""
+def _rows(
+    root: str | None,
+    word: Word,
+    tagged: TaggedForms,
+    cited: list[Ending] | None = None,
+) -> Iterator[dict]:
+    """One row per (form, tag) of the word, without repeats. With no root,
+    the root is the word's dictionary heading."""
     entry = word.entry
     lemma = dictionary_form(entry, tagged)
+    if root is None:
+        root = lemma
 
     # A numeral entry holds four words (unus, primus, singuli, semel). Keep
     # only the sort that the vocab entry named.
-    if entry.pos == "NUM":
+    if entry.pos == "NUM" and cited is not None:
         sorts = {ending.sort for ending in cited}
         tagged = [(form, ending) for form, ending in tagged if ending.sort in sorts]
 

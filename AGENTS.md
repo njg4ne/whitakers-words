@@ -8,9 +8,8 @@ data formats are covered in depth in `docs/data.md`, and the choice of fork in
 
 `word_form_enumerator/` is a pure-Python (stdlib-only) generator. It writes
 every inflected Latin form in William Whitaker's Words to a text file, one per
-line. The larger goal, in another project, is to go from a lemma (*ago, agere*;
-*mater, matris*) to all of its forms. The flat list is the first deliverable, and
-a lemma → forms lookup is the likely next one.
+line, and looks up every tagged form of one vocab-list word
+(`get_latin_forms`), which a student project uses to build Wordle lists.
 
 - This repo lives at `git@github.com:njg4ne/whitakers-words.git`, branch
   `main`. GitHub still lists it as a fork of mk270, but its `main` holds this
@@ -19,10 +18,11 @@ a lemma → forms lookup is the likely next one.
   named `main`) and `submodules/ben-crowell` (Bitbucket) are the two maintained
   forks of the Ada source. They are **reference only**: the
   enumerator never reads them at runtime.
-- `word_form_enumerator/data/` holds `DICTLINE.GEN`, `INFLECTS.LAT`,
+- `word_form_enumerator/data/whitaker/` holds `DICTLINE.GEN`, `INFLECTS.LAT`,
   `UNIQUES.LAT` and `LICENCE.txt`, copied unchanged from mk270 at `1f2f0fb`.
-  The user explicitly wants the code not to depend on the submodules still being
-  there.
+  `data/bespoke/` holds our own data (tag labels, part-of-speech words); keep
+  hard-coded data there, not in the code. The user explicitly wants the code
+  not to depend on the submodules still being there.
 
 ## Decisions already made (don't re-litigate without a reason)
 
@@ -41,6 +41,20 @@ a lemma → forms lookup is the likely next one.
   every form in memory; users run `sort -u`.
 - **The output is words only.** No tags or lemma, and two-word compound tenses
   (*amatus est*) are left out.
+- **Tagged lookup is separate.** `get_latin_forms(word, pos)` returns one
+  dict per (form, tag) for the word that a vocab-list entry names: the root,
+  not every word the spelling could be a form of (that's what the Ada parser
+  does). Returning more and letting the caller filter is fine; silently
+  dropping a word is not, so nothing is dropped for being rare. A teacher
+  picks forms by the distinct `tag` strings, so keep those stable. The lookup
+  holds the data in memory (loaded once, indexed by stem), an exception to
+  streaming. Its modules, in the order a lookup uses them: `spelling.py`,
+  `words.py` (lines grouped into words: `|` continuation lines, each qu-
+  pronoun's partial paradigms, UNIQUES records as their own words),
+  `citation.py` (citation forms: verbs by their active form unless deponent;
+  dictionary headings), `lookup.py` (looser passes only when nothing matched,
+  homographs narrowed by the entry's other words, identical ones merged), and
+  `tags.py`. `known_issues.py` in the repo root lists the cases it still gets wrong.
 
 ## How the rules map to the Ada source (all under `submodules/mk270/src/`)
 
@@ -52,6 +66,9 @@ a lemma → forms lookup is the likely next one.
 | `rules.ending_fits`, `key_fits` | `Reduce_Stem_List` in `words_engine/words_engine-word_package.adb`. Note that its gender rule (`C` fits anything non-neuter) differs slightly from the one in `inflections_package` |
 | `rules.verb_form_allowed` | `Allowed_Stem` in `words_engine/words_engine-list_sweep.adb` |
 | `rules.pack_ending_fits`, `generate._pack_forms` | `Process_Packons` in `word_package.adb`. The tackon comes from the meaning text `(w/-cumque) ...`. A PRON ending's class must equal the PACK class exactly. Final `m` becomes `n` before `-dam` (*quendam*) |
+| `generate.tagged_forms_of` (PRON + tackon) | TACKON `dem` in `ADDONS.LAT` and `Subtract_Tackon` in `words_engine/words_engine-parse.adb`: the Ada strips `-dem` and parses the rest as `PRON 4 2`, whose endings INFLECTS already spells for it (`eun`, `eorun`). So the `(w/-dem ONLY ...)` entry yields *idem, eundem, ...* and never its bare stubs |
+| `codes.PartOfSpeech` | `Part_Of_Speech_Type` in `latin_utils/latin_utils-inflections_package.ads`, same members and order. The values are the upper-case codes the data files use |
+| `codes.Age`, `codes.Frequency` | `Age_Type` and `Frequency_Type` in the same `.ads` file. Frequency's letters mean slightly different things for dictionary entries and for endings; both scales are in its docstring |
 | `inflects.ENTRY_POS` | `Eff_Part` in `support_utils/support_utils-word_support_package.adb` (VPAR and SUPINE → V) |
 
 **Deliberate deviation:** the Ada rejects infinitives (person 0) of `IMPERS`
@@ -81,14 +98,14 @@ deviation in `rules.py` and here.
 
 ## Checking changes
 
-```sh
-python3 -m word_form_enumerator -o /tmp/forms.txt   # ~1.2 s, 1,399,668 lines, 1,185,893 after sort -u (as of 1f2f0fb)
-uvx ruff check --select E,F,I,UP,B word_form_enumerator
-```
+Use the `verify-forms` skill: `python3 -m word_form_enumerator.verify` with
+`--save` before a change and `--compare` after it. It's one stdlib command
+that regenerates the list (about 2 s), checks known forms and lookups, and
+lists what changed. Prefer it, and short Python, over shell pipelines,
+`git stash` or ad hoc temp directories, which need extra approval.
 
-Before and after a change, compare the line counts and `cmp` the outputs, or
-diff the `sort -u` outputs. Then use the `verify-forms` skill in
-`.agents/skills/` for spot checks.
+Lint is ruff (`ruff check --select E,F,I,UP,B word_form_enumerator`). The
+user runs it; don't install it or fetch it with `uvx` without asking.
 
 ## Working with this user
 

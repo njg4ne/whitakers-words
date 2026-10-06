@@ -3,7 +3,7 @@
     python3 example.py
 """
 
-from word_form_enumerator import PartOfSpeech, get_latin_forms
+from omnes_formae import PartOfSpeech, get_latin_forms
 
 if __name__ == "__main__":
     entry = "liber, libri"

@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "omnes-formae"
+version = "0.2.0"
+description = "Every inflected Latin form in Whitaker's Words, and a tagged lookup"
+readme = "README.md"
+license = "AGPL-3.0-or-later"
+license-files = ["LICENSE", "omnes_formae/data/whitaker/LICENCE.txt"]
+requires-python = ">=3.10"
+
+[project.urls]
+Homepage = "https://github.com/njg4ne/whitakers-words"
+Documentation = "https://njg4ne.github.io/whitakers-words/"
+
+[project.scripts]
+omnes-formae = "omnes_formae.__main__:main"
+
+[tool.setuptools]
+packages = ["omnes_formae"]
+
+[tool.setuptools.package-data]
+omnes_formae = ["data/whitaker/*", "data/bespoke/*"]

@@ -9,3 +9,8 @@ wheelock-forms.json
 # Vocab data from a third-party site, with no licence found: not ours to publish.
 vocab.csv
 wheelock-vocab.json
+
+# Package builds (uv build / python -m build)
+build/
+dist/
+*.egg-info/

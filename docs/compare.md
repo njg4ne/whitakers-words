@@ -130,3 +130,8 @@ Everything else is either a compiled index for the parser or a runtime setting.
 - **Checking the output:** feed the generated forms back into a built `words` binary to confirm
   that each one parses to the expected lemma. ben-crowell's no-pager default and environment
   variables make that step easier to script, but mk270 works with a `WORD.MOD` file too.
+
+---
+
+AI disclosure: written with an AI assistant (Claude, by Anthropic), directed
+and reviewed by njg4ne.

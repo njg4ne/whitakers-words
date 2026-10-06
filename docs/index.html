@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>omnes_formae</title>
+  <meta name="description" content="Every inflected Latin form in Whitaker's Words, and a tagged lookup">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+</head>
+<body>
+  <!-- docsify renders the Markdown files in this folder in the browser.
+       Pages marked "Generated" come from build_docs.py in the repo root. -->
+  <div id="app">Loading…</div>
+  <script>
+    window.$docsify = {
+      name: "omnes_formae",
+      repo: "https://github.com/njg4ne/whitakers-words",
+      loadSidebar: true,
+      subMaxLevel: 2,
+      auto2top: true,
+      search: { depth: 3 },
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+</body>
+</html>

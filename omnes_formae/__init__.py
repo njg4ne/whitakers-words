@@ -4,7 +4,7 @@
 - get_latin_forms: every form of one vocab-list word, tagged (lookup.py).
 - PartOfSpeech, Frequency, Age: Whitaker's codes as enums (codes.py).
 
-See README.md for usage and docs/data.md for how the data files relate.
+See docs/ (the docs site) for usage, and docs/data.md for how the data files relate.
 """
 
 from .all_forms import iter_forms, write_forms

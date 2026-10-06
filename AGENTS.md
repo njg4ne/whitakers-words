@@ -1,12 +1,12 @@
 # AGENTS.md
 
-Context for agents working in this repo. User-facing usage is in `README.md`. The
-data formats are covered in depth in `docs/data.md`, and the choice of fork in
-`docs/compare.md`.
+Context for agents working in this repo. User-facing usage is in `docs/` (the
+docs site), linked from `README.md`. The data formats are covered in depth in
+`docs/data.md`, and the choice of fork in `docs/compare.md`.
 
 ## What this repo is
 
-`word_form_enumerator/` is a pure-Python (stdlib-only) generator. It writes
+`omnes_formae/` is a pure-Python (stdlib-only) generator. It writes
 every inflected Latin form in William Whitaker's Words to a text file, one per
 line, and looks up every tagged form of one vocab-list word
 (`get_latin_forms`), which a student project uses to build Wordle lists.
@@ -17,8 +17,8 @@ line, and looks up every tagged form of one vocab-list word
 - `submodules/mk270` (GitHub, upstream branch `master`; the local branch is
   named `main`) and `submodules/ben-crowell` (Bitbucket) are the two maintained
   forks of the Ada source. They are **reference only**: the
-  enumerator never reads them at runtime.
-- `word_form_enumerator/data/whitaker/` holds `DICTLINE.GEN`, `INFLECTS.LAT`,
+  package never reads them at runtime.
+- `omnes_formae/data/whitaker/` holds `DICTLINE.GEN`, `INFLECTS.LAT`,
   `UNIQUES.LAT` and `LICENCE.txt`, copied unchanged from mk270 at `1f2f0fb`.
   `data/bespoke/` holds our own data (tag labels, part-of-speech words); keep
   hard-coded data there, not in the code. The user explicitly wants the code
@@ -98,13 +98,13 @@ deviation in `rules.py` and here.
 
 ## Checking changes
 
-Use the `verify-forms` skill: `python3 -m word_form_enumerator.verify` with
+Use the `verify-forms` skill: `python3 -m omnes_formae.verify` with
 `--save` before a change and `--compare` after it. It's one stdlib command
 that regenerates the list (about 2 s), checks known forms and lookups, and
 lists what changed. Prefer it, and short Python, over shell pipelines,
 `git stash` or ad hoc temp directories, which need extra approval.
 
-Lint is ruff (`ruff check --select E,F,I,UP,B word_form_enumerator`). The
+Lint is ruff (`ruff check --select E,F,I,UP,B omnes_formae`). The
 user runs it; don't install it or fetch it with `uvx` without asking.
 
 ## Working with this user
@@ -117,3 +117,12 @@ user runs it; don't install it or fetch it with `uvx` without asking.
   an unrequested container build. Ask before running one.
 - **Docs style:** the docs in `docs/` are short and factual. Check every claim
   against the files or the source before writing it.
+- **Docs site:** `docs/` is served by GitHub Pages as a docsify site (no
+  build). `docs/api.md` and `docs/limitations.md` are generated: edit the
+  docstrings or `LIMITATIONS.md` and run `python3 build_docs.py`. The other
+  pages are hand-written. The root `README.md` covers the repo (install,
+  layout, developing) and links to the site for package details. The user
+  deploys Pages and makes releases (`RELEASING.md`); don't tag or push.
+- **AI disclosure:** every doc you write ends with the AI disclosure line used
+  in `docs/data.md` (written with Claude, directed and reviewed by njg4ne),
+  and `README.md` has an "AI disclosure" section. Keep both when editing.

@@ -1,11 +1,11 @@
 ---
 name: refresh-words-data
-description: Update the bundled Whitaker's Words data in word_form_enumerator/data/whitaker from a newer mk270 submodule commit, and check what changed in the generated forms.
+description: Update the bundled Whitaker's Words data in omnes_formae/data/whitaker from a newer mk270 submodule commit, and check what changed in the generated forms.
 ---
 
 # Refresh the bundled data
 
-The enumerator reads only `word_form_enumerator/data/` (`whitaker/` for
+The package reads only `omnes_formae/data/` (`whitaker/` for
 Whitaker's files, `bespoke/` for ours). The submodules are reference copies,
 so a refresh is a deliberate copy.
 
@@ -20,9 +20,9 @@ so a refresh is a deliberate copy.
 
 3. **Copy the four files** `DICTLINE.GEN`, `INFLECTS.LAT`, `UNIQUES.LAT` and
    `LICENCE.txt` from `submodules/mk270/` into
-   `word_form_enumerator/data/whitaker/`, unchanged.
+   `omnes_formae/data/whitaker/`, unchanged.
 
-4. **Update the recorded commit** in `word_form_enumerator/data/whitaker/README.md`,
+4. **Update the recorded commit** in `omnes_formae/data/whitaker/README.md`,
    `README.md` (the "Data and licence" section), `AGENTS.md`, and the baseline
    counts in `.agents/skills/verify-forms/SKILL.md`.
 

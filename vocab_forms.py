@@ -14,7 +14,7 @@ import csv
 import sys
 from pathlib import Path
 
-from word_form_enumerator import get_latin_forms
+from omnes_formae import get_latin_forms
 
 
 def main() -> None:

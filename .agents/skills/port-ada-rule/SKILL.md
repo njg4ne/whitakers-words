@@ -1,6 +1,6 @@
 ---
 name: port-ada-rule
-description: Find how the Whitaker's Words Ada code handles a morphology case (stem keys, class matching, verb kinds, packons, irregulars) and port it into word_form_enumerator without guessing.
+description: Find how the Whitaker's Words Ada code handles a morphology case (stem keys, class matching, verb kinds, packons, irregulars) and port it into omnes_formae without guessing.
 ---
 
 # Port a rule from the Ada source

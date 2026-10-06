@@ -1,4 +1,4 @@
-"""python -m word_form_enumerator [-o forms.txt] [--data-dir DIR]"""
+"""python -m omnes_formae [-o forms.txt] [--data-dir DIR]"""
 
 import argparse
 from pathlib import Path
@@ -9,7 +9,7 @@ from .paths import WHITAKER_DIR
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        prog="python -m word_form_enumerator",
+        prog="python -m omnes_formae",
         description="Write every Latin form in Whitaker's Words, one per line.",
     )
     parser.add_argument("-o", "--output", type=Path, default=Path("forms.txt"))

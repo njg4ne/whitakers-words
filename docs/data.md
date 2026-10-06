@@ -187,3 +187,8 @@ checks:
 The age and frequency flags can drop variants the user may not want. For example, the poetic
 1st-declension genitive in *-ai* is marked `B B`. Keeping only frequency `A` gives the
 textbook paradigm.
+
+---
+
+AI disclosure: written with an AI assistant (Claude, by Anthropic), directed
+and reviewed by njg4ne.

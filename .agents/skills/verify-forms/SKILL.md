@@ -1,6 +1,6 @@
 ---
 name: verify-forms
-description: Check word_form_enumerator after a change - regenerate the forms list, compare it with the list from before the change, and run the built-in checks of known forms, known non-forms and lookups.
+description: Check omnes_formae after a change - regenerate the forms list, compare it with the list from before the change, and run the built-in checks of known forms, known non-forms and lookups.
 ---
 
 # Verify the forms and the lookup
@@ -12,20 +12,20 @@ the session can write, such as its scratch directory.
 ## 1. Before the change
 
 ```sh
-python3 -m word_form_enumerator.verify --save <scratch>/before.txt
+python3 -m omnes_formae.verify --save <scratch>/before.txt
 ```
 
 ## 2. After the change
 
 ```sh
-python3 -m word_form_enumerator.verify --compare <scratch>/before.txt
+python3 -m omnes_formae.verify --compare <scratch>/before.txt
 ```
 
 It prints the line and unique counts (the baseline at data commit `1f2f0fb`
 is 1,399,668 lines and 1,185,902 unique), then:
 
 - `MISSING` / `UNEXPECTED` for the forms in `PRESENT` and `ABSENT` in
-  `word_form_enumerator/verify.py`, which cover each conjugation and
+  `omnes_formae/verify.py`, which cover each conjugation and
   declension, esse, deponents, short imperatives, PACK and -dem tackons, and
   impersonals;
 - `LOOKUP` for any `get_latin_forms` call in `LOOKUPS` whose headings changed;

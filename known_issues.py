@@ -5,7 +5,7 @@
 Above each case: why it happens, then whether and how it could be fixed.
 """
 
-from word_form_enumerator import get_latin_forms
+from omnes_formae import get_latin_forms
 
 # Return nothing. (Wheelock "latin", Wheelock "type")
 NO_MATCH = [

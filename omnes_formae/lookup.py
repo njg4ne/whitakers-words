@@ -52,7 +52,7 @@ def get_latin_forms(
             "adjective, cardinal"), a PartOfSpeech, or its code ("V").
 
     Returns:
-        One dict per (form, grammatical slot). See README.md for every key.
+        One dict per (form, grammatical slot). See docs/lookup.md for every key.
         An empty list means no word matched, or the entry is an enclitic
         ("-que") or a prefix, which Whitaker doesn't keep as words.
 

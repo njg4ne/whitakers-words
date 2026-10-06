@@ -16,7 +16,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-from word_form_enumerator import get_latin_forms
+from omnes_formae import get_latin_forms
 
 VOCAB = Path("wheelock-vocab.json")
 OUTPUT = Path("wheelock-forms.json")

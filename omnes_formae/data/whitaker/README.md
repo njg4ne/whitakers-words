@@ -1,7 +1,7 @@
 # Data
 
 These files were copied unchanged from the mk270 fork of Whitaker's Words
-(`submodules/mk270`, commit `1f2f0fb`), so the enumerator runs without the
+(`submodules/mk270`, commit `1f2f0fb`), so the package runs without the
 submodules:
 
 - `DICTLINE.GEN`: the lexicon (stems, class, meaning)

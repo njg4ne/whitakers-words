@@ -1,8 +1,8 @@
 """Check the forms list and the lookup after a change. One command, no shell
 pipelines:
 
-    python3 -m word_form_enumerator.verify --save before.txt   # before a change
-    python3 -m word_form_enumerator.verify --compare before.txt   # after it
+    python3 -m omnes_formae.verify --save before.txt   # before a change
+    python3 -m omnes_formae.verify --compare before.txt   # after it
 
 It prints the line and unique counts, checks forms that must and must not be
 in the list, checks a few lookups, and with --compare lists the forms added
@@ -48,7 +48,7 @@ LOOKUPS = [
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(prog="python3 -m word_form_enumerator.verify")
+    parser = argparse.ArgumentParser(prog="python3 -m omnes_formae.verify")
     parser.add_argument("--save", type=Path, help="save the unique forms here")
     parser.add_argument("--compare", type=Path, help="compare with saved forms")
     args = parser.parse_args()

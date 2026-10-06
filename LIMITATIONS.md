@@ -1,0 +1,60 @@
+# Limitations
+
+Known gaps in `word_form_enumerator` and `get_latin_forms`. Counts are from
+the Wheelock vocab run (`wheelock_forms.py`), where 862 of 880 entries return
+forms. Of its 853 distinct entries, 821 name exactly one word.
+`python3 known_issues.py` shows most of the cases below.
+
+## Forms that are missing
+
+- **Enclitics and prefixes** (*-ne*, *-que*, *-ve*, *re-*). Whitaker keeps
+  them in `ADDONS.LAT` and strips them off a word before parsing it, so they
+  aren't words, and the lookup returns nothing for them.
+- **Two-word forms**: compound tenses (*amatus est*), multi-word numerals
+  (*viginti unus*, *tertius decimus*) and phrases.
+- **Proper nouns** that Whitaker lacks, such as *Troia*.
+- **Irregular forms in `UNIQUES.LAT` aren't linked to their word.** Records
+  that share a meaning become a word of their own (*quisquis*), so *vult* and
+  *vis* aren't among the forms of *volo*, and *di* and *dii* aren't among
+  those of *deus*.
+
+## Tags
+
+- **Each form has only the tags Whitaker's endings carry**: case, number and
+  gender for nouns, and tense, voice, mood, person and number for verbs.
+  Declension, conjugation, noun gender and verb kind belong to the word.
+  They're in `lemma` but not in the separate keys.
+- **No gerund tag.** Gerunds appear as neuter forms of the future passive
+  participle, which is the gerundive.
+- **Deponents are tagged passive**, the way Whitaker tags them: *conor* is
+  "present passive indicative 1st person singular".
+- **Shared genders are split into one row per gender.** "Common" becomes
+  masculine and feminine on every part of speech (so *ego* gets both). "Any"
+  becomes all three only on adjectives, numerals and participles.
+
+## Matching
+
+- **Some entries name more than one word**, when the entry's other words
+  don't tell homographs apart and their forms differ: *liber* (children,
+  free, book), *qui*, *quis*, *scio*, *vis*, *in*, *ne*, *cum*, *populus*.
+  All of them come back, rare ones included; each row's `lemma`, `meaning`
+  and `lemma_frequency` tell them apart. Homographs with identical forms
+  (*caelum* heaven and chisel, *locus*) are merged into one word.
+- **Loose fallbacks can pick the wrong word.** When nothing else matches, the
+  lookup accepts other listed forms (a passive verb, any nominative) and then
+  ignores the part of speech. That finds *video* for *videor*, but it also
+  makes *philosopha* (noun) find the adjective *philosophus*, and *melior*
+  return all of *bonus*.
+- **`entry_id` is a line number.** It counts lines in `DICTLINE.GEN`, or in
+  `UNIQUES.LAT` when negative, and stays stable only while the data files do.
+
+## The forms themselves
+
+- **Generated, not attested.** Every stem gets every ending that fits, so
+  some forms are possible but never used, or archaic. Each row's `form_age`
+  and `form_frequency` help filter these out.
+- **Spelling follows the data**, which sometimes uses *j* (*cujus*) and
+  capitals (*Deus*, the only common *deus*). Lookups ignore case, i/j, u/v
+  and macrons, but the output keeps the data's spelling.
+- **Impersonal verbs keep their infinitives** (*oportere*), which the Ada
+  parser rejects.

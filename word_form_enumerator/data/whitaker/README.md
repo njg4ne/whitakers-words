@@ -9,4 +9,6 @@ submodules:
 - `UNIQUES.LAT`: irregular forms that are spelled out in full
 - `LICENCE.txt`: Whitaker's licence, which covers these files
 
-To refresh them, copy the same four files from a newer checkout.
+To refresh them, copy the same four files from a newer checkout (see the
+`refresh-words-data` skill in `.agents/skills/`). Our own data is in
+`../bespoke/`.

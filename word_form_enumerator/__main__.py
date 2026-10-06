@@ -3,7 +3,8 @@
 import argparse
 from pathlib import Path
 
-from . import DATA_DIR, write_forms
+from .all_forms import write_forms
+from .paths import WHITAKER_DIR
 
 
 def main() -> None:
@@ -12,7 +13,10 @@ def main() -> None:
         description="Write every Latin form in Whitaker's Words, one per line.",
     )
     parser.add_argument("-o", "--output", type=Path, default=Path("forms.txt"))
-    parser.add_argument("--data-dir", type=Path, default=DATA_DIR)
+    parser.add_argument(
+        "--data-dir", type=Path, default=WHITAKER_DIR,
+        help="folder with DICTLINE.GEN, INFLECTS.LAT and UNIQUES.LAT",
+    )
     args = parser.parse_args()
 
     count = write_forms(args.output, args.data_dir)

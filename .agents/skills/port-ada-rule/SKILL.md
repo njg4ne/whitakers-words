@@ -22,8 +22,8 @@ data alone.
 | Enum names and their order | `latin_utils/latin_utils-inflections_package.ads` (`Tense_Type`, `Mood_Type`, `Verb_Kind_Type`, ...) |
 | Record field layouts in the text files | `latin_utils/*_io.adb` (for example, `inflection_record_io.adb`, `noun_entry_io.adb`) |
 
-`grep -rn "<Symbol>" submodules/mk270/src` is usually enough. The code is
-verbose but direct.
+Searching `submodules/mk270/src` for the symbol with your file-search tool is
+usually enough. The code is verbose but direct.
 
 ## Porting rules
 
@@ -37,8 +37,9 @@ verbose but direct.
    symbol in the docstring.
 4. If you deliberately differ from the Ada, comment it in the code and add it to
    the "Deliberate deviation" note in `AGENTS.md`.
-5. Run the `verify-forms` skill and explain every line of the output diff.
+5. Run the `verify-forms` skill and explain every form it reports added or
+   removed.
 
 The ben-crowell fork differs mostly in UX (macron stripping, environment-variable
 config) and lacks the issue-101 data fixes. Only check it when a rule looks
-fork-specific: `diff -r submodules/mk270/src submodules/ben-crowell/src`.
+fork-specific, and then read the same file in `submodules/ben-crowell/src`.

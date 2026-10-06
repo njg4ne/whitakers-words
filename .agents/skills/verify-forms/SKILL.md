@@ -1,63 +1,44 @@
 ---
 name: verify-forms
-description: Check word_form_enumerator output after a change - regenerate, compare against the previous output, spot-check known paradigms and known non-forms, and optionally validate against the Ada parser.
+description: Check word_form_enumerator after a change - regenerate the forms list, compare it with the list from before the change, and run the built-in checks of known forms, known non-forms and lookups.
 ---
 
-# Verify enumerator output
+# Verify the forms and the lookup
 
-## 1. Regenerate and compare
+Everything runs through one stdlib module, so there are no shell pipelines,
+temporary-directory tricks or `git stash`. Save the "before" list somewhere
+the session can write, such as its scratch directory.
 
-```sh
-S=$(mktemp -d)
-git stash -q && python3 -m word_form_enumerator -o $S/before.txt; git stash pop -q
-python3 -m word_form_enumerator -o $S/after.txt
-wc -l $S/before.txt $S/after.txt
-diff <(sort -u $S/before.txt) <(sort -u $S/after.txt) | head -50
-```
-
-Every added or removed form should be explainable by the change you made. The
-baseline at data commit `1f2f0fb` is 1,399,668 lines and 1,185,893 unique.
-
-## 2. Spot checks
-
-Each of these must be present (`grep -cx WORD forms.txt` ≥ 1):
-
-| Covers | Forms |
-|---|---|
-| 1st conj. | amo amabantur amabar amatus |
-| 3rd conj. + perfect/participle | ago agere egit actus |
-| 3rd decl. noun, two stems | mater matris matrem matribus |
-| esse (synthesized entry) | sum es est fuit esse |
-| sum compound (`V 5 1`, `TO_BEING`) | abes |
-| deponent | sequor sequi secutus |
-| irregular stems | tuli latus eo it |
-| short imperatives | dic fer |
-| PACK + tackon | quicumque cujuscumque quendam |
-| impersonal (incl. kept infinitive) | oportet oportere |
-
-Each of these must be **absent**:
-
-| Why | Forms |
-|---|---|
-| Deponents have no active forms | sequo |
-| Short imperatives only for dic/duc/fac/fer | ag (as the imperative of ago) |
+## 1. Before the change
 
 ```sh
-for w in amo amabantur mater matris ago agere egit actus sum es fuit esse abes \
-         sequor sequi secutus tuli dic fer quicumque cujuscumque quendam oportet; do
-  grep -qx "$w" forms.txt || echo "MISSING $w"; done
-for w in sequo ag; do grep -qx "$w" forms.txt && echo "UNEXPECTED $w"; done
+python3 -m word_form_enumerator.verify --save <scratch>/before.txt
 ```
 
-`ag` can legitimately appear from other entries, so check which entry
-produced it before worrying.
+## 2. After the change
 
-## 3. Ada parser as an oracle (not yet done; ask the user before building a container)
+```sh
+python3 -m word_form_enumerator.verify --compare <scratch>/before.txt
+```
 
-Build either fork: `apt-get install gnat gprbuild make && make` in a
-`debian:stable-slim` Podman container, which is the same recipe as mk270's
-`.github/workflows/ci.yml`. Then run a sample of forms through `bin/words`, one
-per line, and collect the ones reported as `UNKNOWN`. Any unknown form is either
-a generator bug or a deliberate deviation listed in `AGENTS.md`. Set
-`WORD.MOD` / `WORD.MDV` (or, on ben-crowell, the `WHITAKER_USER` environment
-variable) to turn off the pager and the tricks, so the output is easy to parse.
+It prints the line and unique counts (the baseline at data commit `1f2f0fb`
+is 1,399,668 lines and 1,185,902 unique), then:
+
+- `MISSING` / `UNEXPECTED` for the forms in `PRESENT` and `ABSENT` in
+  `word_form_enumerator/verify.py`, which cover each conjugation and
+  declension, esse, deponents, short imperatives, PACK and -dem tackons, and
+  impersonals;
+- `LOOKUP` for any `get_latin_forms` call in `LOOKUPS` whose headings changed;
+- with `--compare`, up to 50 forms added and 50 removed.
+
+It exits with status 1 if a check fails. Every added or removed form should
+be explained by the change. When a change is meant to alter a checked form or
+lookup, update the lists in `verify.py` in the same change.
+
+## 3. Ada parser as an oracle (not done yet; ask the user first)
+
+Building the Ada parser needs a container (`debian:stable-slim` with `gnat
+gprbuild make`, the recipe in mk270's `.github/workflows/ci.yml`). The user
+declined an unrequested container build, so propose it and wait. Run with
+it, a sample of forms goes through `bin/words`, and any form it reports as
+`UNKNOWN` is either a generator bug or a deviation listed in `AGENTS.md`.

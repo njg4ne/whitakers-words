@@ -73,4 +73,4 @@ used throughout. See [Limitations](limitations.md) for what the lookup gets wron
 ---
 
 AI disclosure: written with an AI assistant (Claude, by Anthropic), directed
-and reviewed by njg4ne.
+and reviewed by [njg4ne](https://github.com/njg4ne).

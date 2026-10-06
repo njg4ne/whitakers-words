@@ -30,7 +30,7 @@ NOTE = (
 )
 DISCLOSURE = (
     "\n---\n\nAI disclosure: written with an AI assistant (Claude, by Anthropic), "
-    "directed\nand reviewed by njg4ne.\n"
+    "directed\nand reviewed by [njg4ne](https://github.com/njg4ne).\n"
 )
 
 

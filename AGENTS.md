@@ -128,3 +128,4 @@ user runs it; don't install it or fetch it with `uvx` without asking.
 - **AI disclosure:** every doc you write ends with the AI disclosure line used
   in `docs/data.md` (written with Claude, directed and reviewed by njg4ne),
   and `README.md` has an "AI disclosure" section. Keep both when editing.
+  Wherever a doc names njg4ne, link it: `[njg4ne](https://github.com/njg4ne)`.

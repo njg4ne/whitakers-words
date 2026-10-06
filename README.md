@@ -93,7 +93,7 @@ Run these from the repo root.
 ## AI disclosure
 
 The code and docs in this repo were written with an AI assistant (Claude, by
-Anthropic). njg4ne directed the work and reviewed it, and decides what is
+Anthropic). [njg4ne](https://github.com/njg4ne) directed the work and reviewed it, and decides what is
 committed. Whitaker's data files are copied unchanged, not AI-written.
 
 ## Licence
